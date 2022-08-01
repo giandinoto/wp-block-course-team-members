@@ -1,3 +1,4 @@
+/* 28. The AlignmentToolbar Component */
 
 import { __ } from '@wordpress/i18n';
 
@@ -5,13 +6,15 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 export default function save( { attributes }) {
 	
-	const { text } = attributes;
+	const { text, alignment } = attributes;
 	
 	return (
 		<RichText.Content
-			{ ...useBlockProps.save() }
-			tagName="h4" 
-			value= { text }
+			{ ...useBlockProps.save( {
+				className: `text-box-align-${ alignment }`,
+			} ) }
+			tagName="h4"
+			value={ text }
 		/>
 	);
 }

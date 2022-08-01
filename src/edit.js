@@ -1,14 +1,28 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, RichText, BlockControls } from '@wordpress/block-editor';
+import { useBlockProps, RichText, BlockControls, AlignmentToolbar } from '@wordpress/block-editor';
 import { ToolbarGroup, ToolbarButton, DropdownMenu } from '@wordpress/components';
 import './editor.scss';
 
 export default function Edit( { attributes, setAttributes } ) {
 
-	const { text } = attributes;
+	const { text, alignment } = attributes;
+	
+	const onChangeAlignment = newAlignment => {
+		setAttributes ( { alignment: newAlignment } )	
+	}
+	const onChangeText = newText => {
+		setAttributes ( { text: newText } )	
+	}
 
 	return (
 		<>
+			<BlockControls>
+				<AlignmentToolbar 
+					value= { alignment }
+					onChange = { onChangeAlignment }
+				/>
+			</BlockControls>
+
 			<BlockControls group="inline">
 				<p>Inline</p>
 			</BlockControls>
@@ -65,12 +79,16 @@ export default function Edit( { attributes, setAttributes } ) {
 			
 			</BlockControls>
 
-			<RichText  { ...useBlockProps() } 
-				onChange = { ( text ) => setAttributes ( { text } ) }
+			<RichText  
+				{ ...useBlockProps( {
+					className: `text-box-align-${ alignment }`,
+				} ) }
+				onChange={ onChangeText }
 				value = { text }
 				placeholder={ __("Placeholder", "text-block")}
 				tagName="h4"
 				allowedFormats={[ ] }
+				style={ { textAlign: alignment} } 
 			/>
 		</>
 	);
