@@ -1,5 +1,12 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, RichText, BlockControls, InspectorControls, AlignmentToolbar } from '@wordpress/block-editor';
+import { 	useBlockProps,
+			RichText,
+			BlockControls,
+			InspectorControls,
+			AlignmentToolbar,
+			PanelColorSettings 
+		} from '@wordpress/block-editor';
+
 import { 	ToolbarGroup,ToolbarButton,
 			DropdownMenu,
 			PanelBody,
@@ -14,7 +21,7 @@ import './editor.scss';
 
 export default function Edit( { attributes, setAttributes } ) {
 
-	const { text, alignment } = attributes;
+	const { text, alignment, backgroundColor, textColor } = attributes;
 	
 	const onChangeAlignment = newAlignment => {
 		setAttributes ( { alignment: newAlignment } )	
@@ -23,13 +30,34 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes ( { text: newText } )	
 	}
 
+	const onBackgroundColorChange = ( newBgColor ) => {
+		setAttributes( { backgroundColor: newBgColor } );
+		//console.log(newBgColor);
+	};
+	const onTextColorChange = ( newTextColor ) => {
+		setAttributes( { textColor: newTextColor } );
+	};
+
 	return (
 		<>
-			<InspectorControls>
-				<PanelBody
+
+{ /*
+			 <InspectorControls>
+				
+	
+			 <PanelBody
 					title = { __("Color settings", "text-box") }
 					icon = "admin-appearance"
 					>
+
+					<ColorPalette
+							colors={ [
+								{ name: 'red', color: '#F00' },
+								{ name: 'black', color: '#000' },
+							] }
+							value = { backgroundColor }
+							onChange={ onBackgroundColorChange }
+					/>	
 					
 					<TextControl
 						label="Input vaulue"
@@ -47,7 +75,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					
 					<ToggleControl 
 						label="Toggle control"
-						/* checked= { true } */
 						onChange = { ( v ) => console.log( v ) }
 					/>
 
@@ -55,16 +82,11 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChangeComplete={ ( v ) => console.log ( v )}>
 					</ColorPicker>
 				
-				</PanelBody>
+						</PanelBody>
 
-				<ColorPalette
-						colors={ [
-							{ name: 'red', color: '#F00' },
-							{ name: 'black', color: '#000' },
-						] }
-						onChange={ ( v ) => console.log( v ) }
-				/>
-			</InspectorControls>
+			</InspectorControls> */}
+			
+			{ /*
 			
 			<BlockControls>
 				<AlignmentToolbar 
@@ -80,6 +102,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			<BlockControls group="block">
 				<p>Block controls</p>
 			</BlockControls>
+
+			*/}
 			
 			<BlockControls 
 				controls={[{
@@ -129,16 +153,43 @@ export default function Edit( { attributes, setAttributes } ) {
 			
 			</BlockControls>
 
-			<RichText  
+
+			<InspectorControls>
+				<PanelColorSettings
+					title={ __( 'Color Settings', 'text-box' ) }
+					icon="admin-appearance"
+					initialOpen
+					disableCustomColors={ false }
+					colorSettings={ [
+						{
+							value: backgroundColor,
+							onChange: onBackgroundColorChange,
+							label: __( 'Background Color', 'text-box' ),
+						},
+						{
+							value: textColor,
+							onChange: onTextColorChange,
+							label: __( 'Text Color', 'text-box' ),
+						},
+					] }
+				>
+					
+				</PanelColorSettings>
+			</InspectorControls>
+
+			<RichText
 				{ ...useBlockProps( {
 					className: `text-box-align-${ alignment }`,
+					style: {
+						backgroundColor,
+						color: textColor,
+					},
 				} ) }
 				onChange={ onChangeText }
-				value = { text }
-				placeholder={ __("Placeholder", "text-block")}
+				value={ text }
+				placeholder={ __( 'Your Text', 'text-box' ) }
 				tagName="h4"
-				allowedFormats={[ ] }
-				style={ { textAlign: alignment} } 
+				allowedFormats={ [] }
 			/>
 		</>
 	);
